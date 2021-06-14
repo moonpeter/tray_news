@@ -39,14 +39,16 @@ def get_list():
                 pass
             main_content += content_in_p[j].text
 
-        crawling_data = CrawlingData(
-            news_site='Cnet',
-            eng_title=title,
-            eng_sub_title=sub_title,
-            eng_content=main_content,
-        )
-        crawling_data.save()
-    return crawling_data
+        get_title_in_db()
+        if title not in title_list_in_db:
+            crawling_data = CrawlingData(
+                news_site='Cnet',
+                eng_title=title,
+                eng_sub_title=sub_title,
+                eng_content=main_content,
+            )
+            crawling_data.save()
+    return
 
 
 title_list_in_db = []
@@ -65,5 +67,4 @@ if __name__ == '__main__':
     get_title_in_db()
     print(title_list_in_db)
     get_list()
-    print("test for commit")
     print(" ========== finished crawling ========== ")
