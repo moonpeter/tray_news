@@ -65,4 +65,5 @@ if __name__ == '__main__':
     get_title_in_db()
     print(title_list_in_db)
     get_list()
+    print("test for commit")
     print(" ========== finished crawling ========== ")
