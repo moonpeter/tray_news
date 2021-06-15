@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import requests
@@ -13,6 +14,7 @@ from crawler.models import CrawlingData
 
 
 def get_list():
+    print(" ========== start crawling ========== ")
     webpage = requests.get("https://www.cnet.com/news/")
     soup = BeautifulSoup(webpage.content, "html.parser")
 
@@ -38,9 +40,10 @@ def get_list():
             except KeyError:
                 pass
             main_content += content_in_p[j].text
+        if len(CrawlingData.objects.all()) > 0:
+            get_title_in_db()
 
-        get_title_in_db()
-        if title not in title_list_in_db:
+        if title not in title_list_in_db[0:4]:
             crawling_data = CrawlingData(
                 news_site='Cnet',
                 eng_title=title,
@@ -48,6 +51,8 @@ def get_list():
                 eng_content=main_content,
             )
             crawling_data.save()
+    print("get_list() === time : ", datetime.datetime.now())
+    print(" ========== finished crawling ========== ")
     return
 
 
@@ -56,15 +61,10 @@ title_list_in_db = []
 
 # DB에서 최신 5개의 제목 정보를 가져오는 메서드
 def get_title_in_db():
-    # if len(title_list_in_db) > 0:
-    for i in range(0, 5):
+    for i in range(0, len(CrawlingData.objects.all())):
         title_list_in_db.append(CrawlingData.objects.all().order_by('-id').values('eng_title')[i]['eng_title'])
+    print(len(CrawlingData.objects.all()), "1111111111")
     return title_list_in_db
 
 
-if __name__ == '__main__':
-    print(" ========== start crawling ========== ")
-    get_title_in_db()
-    print(title_list_in_db)
-    get_list()
-    print(" ========== finished crawling ========== ")
+get_list()
