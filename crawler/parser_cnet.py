@@ -7,9 +7,11 @@ from bs4 import BeautifulSoup
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 import django
+
 django.setup()
 
 import urllib3
+# InsecureRequestWarning 제거
 urllib3.disable_warnings()
 
 from crawler.models import CrawlingData
